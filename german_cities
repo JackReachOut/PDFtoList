@@ -1,25 +1,4 @@
-import PyPDF2
-import re
-import random
 
-
-german_circle = [
-    'Düsseldorf',
-    'Arnsberg',
-    'Detmold',
-    'Köln',
-    'Münster'
-]
-
-german_schools = [
-    'Hauptschule',
-    'Realschule',
-    'Gesamtschule',
-    'Gymnasium',
-    'Sekundarschule',
-]
-
-german_cities = [
     'Cologne',
     'Düsseldorf',
     'Dortmund',
@@ -183,31 +162,3 @@ german_cities = [
     'Wiehl',
     'Niederzier',
      'Altena'
-]
-
-pdf_path = 'C:/Users/Jan/Documents/Projekte/SchulenNRW/sozialindexstufen_der_einzelschulen.pdf'
-
-# Open the PDF file
-with open(pdf_path, 'rb') as pdf_file:
-    pdf_reader = PyPDF2.PdfReader(pdf_file)
-
-    # Extract text from each page
-    all_text = ''
-    for page_num in range(len(pdf_reader.pages)):
-        page = pdf_reader.pages[page_num]
-        all_text += page.extract_text()
-
-        # Add a blank line before "Bezirksregierung"
-        all_text = re.sub(r'Bezirksregierung', f'\nBezirksregierung\n', all_text)
-
-        # Add a blank line before "Kreis"
-        all_text = re.sub(r'Kreis', f'Kreis\n', all_text)
-
-        # Add a blank line before "Stadt"
-        all_text = re.sub(r'Stadt', f'Stadt\n', all_text)
-
-        # Add a blank line before each word from german_schools
-        for school in german_schools:
-            all_text = re.sub(rf'\b{re.escape(school)}\b', f'\n{school}', all_text)
-
-    print(all_text)
