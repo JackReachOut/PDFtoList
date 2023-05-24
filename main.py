@@ -4,11 +4,11 @@ import random
 
 
 german_circle = [
-    'Düsseldorf',
-    'Arnsberg',
-    'Detmold',
-    'Köln',
-    'Münster'
+    'BR Arnsberg',
+    'BR Detmold',
+    'BR Düsseldorf',
+    'BR Köln',
+    'BR Münster'
 ]
 
 german_schools = [
@@ -185,7 +185,14 @@ german_cities = [
      'Altena'
 ]
 
-pdf_path = 'C:/xxx/xxx/Documents/Projekte/SchulenNRW/sozialindexstufen_der_einzelschulen.pdf'
+def extract_content(text):
+    pattern = r'Grundschule(.*?)\$\$\$|§§§|!!!|%%%|&&&|\*\*\*\*\*\*\*\*\*\*'
+    extracted_text = re.sub(pattern, '', text, flags=re.DOTALL)
+    extracted_text = re.sub(r'\n+', '\n', extracted_text)  # Remove multiple consecutive newlines
+    extracted_text = extracted_text.strip()  # Remove leading/trailing whitespace
+    return extracted_text
+
+pdf_path = 'C:/Users/Jan/Documents/Projekte/SchulenNRW/sozialindexstufen_der_einzelschulen.pdf'
 
 # Open the PDF file
 with open(pdf_path, 'rb') as pdf_file:
@@ -198,7 +205,10 @@ with open(pdf_path, 'rb') as pdf_file:
         all_text += page.extract_text()
 
         # Add a blank line before "Bezirksregierung"
-        all_text = re.sub(r'Bezirksregierung', f'\nBezirksregierung\n', all_text)
+        all_text = re.sub(r'Bezirksregierung', f'\nBezirksregierung', all_text)
+
+        # Add a blank line with "**********" before "Bezirksregierung"
+        all_text = re.sub(r'Bezirksregierung', r'**********\nBezirksregierung', all_text)
 
         # Add a blank line before "Kreis"
         all_text = re.sub(r'Kreis', f'Kreis\n', all_text)
@@ -210,4 +220,27 @@ with open(pdf_path, 'rb') as pdf_file:
         for school in german_schools:
             all_text = re.sub(rf'\b{re.escape(school)}\b', f'\n{school}', all_text)
 
-    print(all_text)
+            # Add a blank line with "$$$" before "Gymnasium"
+            all_text = re.sub(r'Gymnasium', r'$$$\nGymnasium', all_text)
+
+            # Add a blank line with "§§§" before "Gesamtschule"
+            all_text = re.sub(r'Gesamtschule', r'§§§\nGesamtschule', all_text)
+
+            # Add a blank line with "!!!" before "Realschule"
+            all_text = re.sub(r'Realschule', r'!!!\nRealschule', all_text)
+
+            # Add a blank line with "%%%" before "Hauptschule"
+            all_text = re.sub(r'Hauptschule', r'%%%\nHauptschule', all_text)
+
+            # Add a blank line with "&&&" before "Sekundarschule"
+            all_text = re.sub(r'Sekundarschule', r'&&&\nSekundarschule', all_text)
+
+            # Extract the desired content
+            extracted_text = extract_content(all_text)
+
+            # Add a blank line before "Bezirksregierung"
+            extracted_text = re.sub(r'Bezirksregierung', f'\nBezirksregierung', all_text)
+
+
+    print(extracted_text)
+
