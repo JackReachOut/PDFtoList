@@ -4,11 +4,11 @@ import random
 
 
 german_circle = [
-    'Düsseldorf',
-    'Arnsberg',
-    'Detmold',
-    'Köln',
-    'Münster'
+    'BR Arnsberg',
+    'BR Detmold',
+    'BR Düsseldorf',
+    'BR Köln',
+    'BR Münster'
 ]
 
 german_schools = [
@@ -210,4 +210,7 @@ with open(pdf_path, 'rb') as pdf_file:
         for school in german_schools:
             all_text = re.sub(rf'\b{re.escape(school)}\b', f'\n{school}', all_text)
 
+
+
     print(all_text)
+
