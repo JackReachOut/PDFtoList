@@ -1,7 +1,7 @@
 import PyPDF2
 import re
 import random
-
+import csv
 
 german_circle = [
     'BR Arnsberg',
@@ -182,15 +182,24 @@ german_cities = [
     'Marienheide',
     'Wiehl',
     'Niederzier',
-     'Altena'
+    'Altena'
 ]
 
-def extract_content(text):
-    pattern = r'Grundschule(.*?)\$\$\$|§§§|!!!|%%%|&&&|\*\*\*\*\*\*\*\*\*\*'
-    extracted_text = re.sub(pattern, '', text, flags=re.DOTALL)
-    extracted_text = re.sub(r'\n+', '\n', extracted_text)  # Remove multiple consecutive newlines
-    extracted_text = extracted_text.strip()  # Remove leading/trailing whitespace
-    return extracted_text
+
+def extract_content(all_text):
+    start_index = all_text.find("Grundschule")
+    end_index = all_text.find("**********", start_index)
+    if start_index != -1 and end_index != -1:
+        extracted_text = all_text[start_index:end_index].strip()
+        return extracted_text
+    else:
+        return None
+
+
+def get_random_lines(input_list, num_lines=5):
+    random_lines = random.sample(input_list, num_lines)
+    return random_lines
+
 
 pdf_path = 'C:/Users/Jan/Documents/Projekte/SchulenNRW/sozialindexstufen_der_einzelschulen.pdf'
 
@@ -207,6 +216,9 @@ with open(pdf_path, 'rb') as pdf_file:
         # Add a blank line before "Bezirksregierung"
         all_text = re.sub(r'Bezirksregierung', f'\nBezirksregierung', all_text)
 
+        # Add a blank line before "Grundschule"
+        all_text = re.sub(r'Grundschule', f'\nGrundschule\n', all_text)
+
         # Add a blank line with "**********" before "Bezirksregierung"
         all_text = re.sub(r'Bezirksregierung', r'**********\nBezirksregierung', all_text)
 
@@ -220,20 +232,23 @@ with open(pdf_path, 'rb') as pdf_file:
         for school in german_schools:
             all_text = re.sub(rf'\b{re.escape(school)}\b', f'\n{school}', all_text)
 
-            # Add a blank line with "$$$" before "Gymnasium"
-            all_text = re.sub(r'Gymnasium', r'$$$\nGymnasium', all_text)
+            # Add a blank line with "**********" before "Grundschule"
+            all_text = re.sub(r'Grundschule', r'**********\nGrundschule', all_text)
 
-            # Add a blank line with "§§§" before "Gesamtschule"
-            all_text = re.sub(r'Gesamtschule', r'§§§\nGesamtschule', all_text)
+            # Add a blank line with "**********" before "Gymnasium"
+            all_text = re.sub(r'Gymnasium', r'**********\nGymnasium', all_text)
 
-            # Add a blank line with "!!!" before "Realschule"
-            all_text = re.sub(r'Realschule', r'!!!\nRealschule', all_text)
+            # Add a blank line with "**********" before "Gymnasium"
+            all_text = re.sub(r'Gesamtschule', r'**********\nGesamtschule', all_text)
 
-            # Add a blank line with "%%%" before "Hauptschule"
-            all_text = re.sub(r'Hauptschule', r'%%%\nHauptschule', all_text)
+            # Add a blank line with "**********" before "Realschule"
+            all_text = re.sub(r'Realschule', r'**********\nRealschule', all_text)
+
+            # Add a blank line with "**********" before "Hauptschule"
+            all_text = re.sub(r'Hauptschule', r'**********\nHauptschule', all_text)
 
             # Add a blank line with "&&&" before "Sekundarschule"
-            all_text = re.sub(r'Sekundarschule', r'&&&\nSekundarschule', all_text)
+            all_text = re.sub(r'Sekundarschule', r'**********\nSekundarschule', all_text)
 
             # Extract the desired content
             extracted_text = extract_content(all_text)
@@ -241,6 +256,67 @@ with open(pdf_path, 'rb') as pdf_file:
             # Add a blank line before "Bezirksregierung"
             extracted_text = re.sub(r'Bezirksregierung', f'\nBezirksregierung', all_text)
 
+            # Extract relevant information
+            pattern = r"(?s)(?<=Gymnasium).*?(?=\*{10})"
+            relevant_info_Gymnasium = re.findall(pattern, extracted_text)
 
-    print(extracted_text)
+            # Extract relevant information
+            pattern = r"(?s)(?<=Gesamtschule).*?(?=\*{10})"
+            relevant_info_Gesamtschule = re.findall(pattern, extracted_text)
 
+            # Extract relevant information
+            pattern = r"(?s)(?<=Realschule).*?(?=\*{10})"
+            relevant_info_Realschule = re.findall(pattern, extracted_text)
+
+            # Extract relevant information
+            pattern = r"(?s)(?<=Hauptschule).*?(?=\*{10})"
+            relevant_info_Hauptschule = re.findall(pattern, extracted_text)
+
+            # Extract relevant information
+            pattern = r"(?s)(?<=Sekundarschule).*?(?=\*{10})"
+            relevant_info_Sekundarschule = re.findall(pattern, extracted_text)
+
+    for info in relevant_info_Gymnasium:
+        relevant_info_Gymnasium_list = [info.strip() for info in relevant_info_Gymnasium]
+
+        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Gymnasium.csv'
+        with open(GymCSV_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(relevant_info_Gymnasium_list)
+            csvfile.close()
+
+    for info in relevant_info_Gesamtschule:
+        relevant_info_Gesamtschule_list = [info.strip() for info in relevant_info_Gesamtschule]
+
+        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Gesamtschule.csv'
+        with open(GymCSV_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(relevant_info_Gesamtschule_list)
+            csvfile.close()
+
+    for info in relevant_info_Realschule:
+        relevant_info_Realschule_list = [info.strip() for info in relevant_info_Realschule]
+
+        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Realschule.csv'
+        with open(GymCSV_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(relevant_info_Realschule_list)
+            csvfile.close()
+
+    for info in relevant_info_Hauptschule:
+        relevant_info_Hauptschule_list = [info.strip() for info in relevant_info_Hauptschule]
+
+        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Hauptschule.csv'
+        with open(GymCSV_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(relevant_info_Hauptschule_list)
+            csvfile.close()
+
+    for info in relevant_info_Sekundarschule:
+        relevant_info_Sekundarschule_list = [info.strip() for info in relevant_info_Sekundarschule]
+
+        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Sekundarschule.csv'
+        with open(GymCSV_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(relevant_info_Sekundarschule_list)
+            csvfile.close()
