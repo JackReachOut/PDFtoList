@@ -201,7 +201,7 @@ def get_random_lines(input_list, num_lines=5):
     return random_lines
 
 
-pdf_path = 'C:/Users/Jan/Documents/Projekte/SchulenNRW/sozialindexstufen_der_einzelschulen.pdf'
+pdf_path = 'C:/xxx/Documents/Projekte/SchulenNRW/sozialindexstufen_der_einzelschulen.pdf'
 
 # Open the PDF file
 with open(pdf_path, 'rb') as pdf_file:
@@ -279,7 +279,7 @@ with open(pdf_path, 'rb') as pdf_file:
     for info in relevant_info_Gymnasium:
         relevant_info_Gymnasium_list = [info.strip() for info in relevant_info_Gymnasium]
 
-        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Gymnasium.csv'
+        GymCSV_path = r'C:\xxx\Documents\Projekte\SchulenNRW\CSV\Gymnasium.csv'
         with open(GymCSV_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(relevant_info_Gymnasium_list)
@@ -288,7 +288,7 @@ with open(pdf_path, 'rb') as pdf_file:
     for info in relevant_info_Gesamtschule:
         relevant_info_Gesamtschule_list = [info.strip() for info in relevant_info_Gesamtschule]
 
-        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Gesamtschule.csv'
+        GymCSV_path = r'C:\xxx\Documents\Projekte\SchulenNRW\CSV\Gesamtschule.csv'
         with open(GymCSV_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(relevant_info_Gesamtschule_list)
@@ -297,7 +297,7 @@ with open(pdf_path, 'rb') as pdf_file:
     for info in relevant_info_Realschule:
         relevant_info_Realschule_list = [info.strip() for info in relevant_info_Realschule]
 
-        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Realschule.csv'
+        GymCSV_path = r'C:\xxx\Documents\Projekte\SchulenNRW\CSV\Realschule.csv'
         with open(GymCSV_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(relevant_info_Realschule_list)
@@ -306,7 +306,7 @@ with open(pdf_path, 'rb') as pdf_file:
     for info in relevant_info_Hauptschule:
         relevant_info_Hauptschule_list = [info.strip() for info in relevant_info_Hauptschule]
 
-        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Hauptschule.csv'
+        GymCSV_path = r'C:\xxx\Documents\Projekte\SchulenNRW\CSV\Hauptschule.csv'
         with open(GymCSV_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(relevant_info_Hauptschule_list)
@@ -315,7 +315,7 @@ with open(pdf_path, 'rb') as pdf_file:
     for info in relevant_info_Sekundarschule:
         relevant_info_Sekundarschule_list = [info.strip() for info in relevant_info_Sekundarschule]
 
-        GymCSV_path = r'C:\Users\Jan\Documents\Projekte\SchulenNRW\CSV\Sekundarschule.csv'
+        GymCSV_path = r'C:\xxx\Documents\Projekte\SchulenNRW\CSV\Sekundarschule.csv'
         with open(GymCSV_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(relevant_info_Sekundarschule_list)
